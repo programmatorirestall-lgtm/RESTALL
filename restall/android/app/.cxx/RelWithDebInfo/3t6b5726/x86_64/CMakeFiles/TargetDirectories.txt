@@ -1,0 +1,2 @@
+/Users/nicopomarico/Developer/restall/android/app/.cxx/RelWithDebInfo/3t6b5726/x86_64/CMakeFiles/edit_cache.dir
+/Users/nicopomarico/Developer/restall/android/app/.cxx/RelWithDebInfo/3t6b5726/x86_64/CMakeFiles/rebuild_cache.dir

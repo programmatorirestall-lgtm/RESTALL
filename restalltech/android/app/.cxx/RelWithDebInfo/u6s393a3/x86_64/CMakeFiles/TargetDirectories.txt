@@ -1,0 +1,2 @@
+/Users/nicopomarico/Developer/restalltech/android/app/.cxx/RelWithDebInfo/u6s393a3/x86_64/CMakeFiles/edit_cache.dir
+/Users/nicopomarico/Developer/restalltech/android/app/.cxx/RelWithDebInfo/u6s393a3/x86_64/CMakeFiles/rebuild_cache.dir

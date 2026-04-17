@@ -1,0 +1,2 @@
+/Users/nicopomarico/Developer/restall/android/app/.cxx/Debug/6f6y4o2x/x86_64/CMakeFiles/edit_cache.dir
+/Users/nicopomarico/Developer/restall/android/app/.cxx/Debug/6f6y4o2x/x86_64/CMakeFiles/rebuild_cache.dir

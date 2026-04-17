@@ -1,0 +1,104 @@
+import 'package:flutter/material.dart';
+import 'package:restall/Screens/Home/components/home.dart';
+import 'package:restall/Screens/Home/home_screen.dart';
+import 'package:restall/Screens/OpenTicket/ticket_screen.dart';
+import 'package:restall/constants.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:restall/theme.dart';
+
+class SideBar extends StatefulWidget {
+  const SideBar({super.key});
+
+  @override
+  State<SideBar> createState() => _SideBarState();
+}
+
+class _SideBarState extends State<SideBar> {
+  int _selectedIndex = 0;
+  String title = "RestAll";
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static const List<Widget> _widgetOptions = <Widget>[
+    Home(),
+    Text(
+      'Index 1: Cerca',
+      style: optionStyle,
+    ),
+    TicketScreen(),
+    Text(
+      'Index 3: Profilo',
+      style: optionStyle,
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+          backgroundColor: Colors.white,
+          titleTextStyle: appBarTextTheme().titleLarge,
+        ),
+        body: Center(
+          child: _widgetOptions.elementAt(_selectedIndex),
+        ),
+        bottomNavigationBar: Container(
+          height: 110,
+          color: kPrimaryColor,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
+            child: GNav(
+              color: primaryColor,
+              activeColor: appBarColor,
+              tabBackgroundColor: accentCanvasColor,
+              gap: 8,
+              tabs: const [
+                GButton(
+                  icon: Icons.home_rounded,
+                  text: 'Home',
+                ),
+                GButton(
+                  icon: Icons.search_rounded,
+                  text: 'Cerca',
+                ),
+                GButton(
+                  icon: Icons.add_rounded,
+                  text: 'Ticket',
+                ),
+                GButton(
+                  icon: Icons.person,
+                  text: 'Profilo',
+                ),
+              ],
+              selectedIndex: _selectedIndex,
+              onTabChange: (index) {
+                setState(() {
+                  _selectedIndex = index;
+                  title = _setTitleByIndex(index);
+                });
+              },
+            ),
+          ),
+        ));
+  }
+}
+
+String _setTitleByIndex(int index) {
+  switch (index) {
+    case 0:
+      return 'Home';
+    case 1:
+      return 'Cerca';
+    case 2:
+      return 'Apri Ticket';
+    case 3:
+      return 'Profilo';
+    default:
+      return 'Not found page';
+  }
+}
