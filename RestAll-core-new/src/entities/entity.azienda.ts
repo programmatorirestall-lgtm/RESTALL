@@ -1,0 +1,20 @@
+export default interface Azienda {
+    id: number,
+    clfr: string,
+    codCf: string,
+    ragSoc: string,
+    ragSoc1: string,
+    indir: string,
+    cap: string,
+    local: string,
+    prov: string,
+    codFisc: string,
+    partiva: string,
+    tel: string,
+    tel2: string,
+    fax: string,
+    email: string,
+    codNaz: string,
+    codsdi: string,
+    pec_fe: string
+}
