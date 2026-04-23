@@ -1,0 +1,12 @@
+{
+    "applinks": {
+        "details": [
+             {
+               "appIDs": [ "DXMKZ5729B.com.startupsrl.restalltech.debug", "DXMKZ5729B.com.startupsrl.restalltech","DXMKZ5729B.com.startupsrl.restall.debug", "DXMKZ5729B.com.startupsrl.restall" ]
+             }
+         ]
+     },
+     "webcredentials": {
+        "apps": [ "DXMKZ5729B.com.startupsrl.restalltech.debug", "DXMKZ5729B.com.startupsrl.restalltech","DXMKZ5729B.com.startupsrl.restall.debug", "DXMKZ5729B.com.startupsrl.restall"]
+     }
+  }

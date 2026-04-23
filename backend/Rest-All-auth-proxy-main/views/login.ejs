@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            margin-right: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #E6E9FF;
+            border-radius: 30px;
+            background-color: #E6E9FF;
+            font-size: 16px;
+        }
+        .form-group input:focus {
+            outline: none;
+           color: black;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 00;
+            letter-spacing: 1px;
+            color: white;
+            margin-top: 20px;
+        }
+        .btn-primary {
+            background-color: #0F2069;
+        }
+        .btn-primary:hover {
+            background-color: #0D1B5B;
+        }
+        .forgot-password {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .forgot-password a {
+            color: #0F2069;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <form>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Inserisci la tua email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Inserisci la tua password" required>
+            </div>
+            <button type="submit" class="btn btn-primary" id="login-button">ACCEDI</button>
+        </form>
+        <script>
+            $(document).ready(function() {
+                $('#login-button').click(function(event) {
+                    event.preventDefault(); // Previene l'invio predefinito del form
+        
+                    var e = $('#email').val(); // Corretto l'uso di .val()
+                    var p = $('#password').val(); // Corretto l'uso di .val()
+                    var data = {
+                        email: e,
+                        password: p,
+                        type: "user"
+                    }
+                    
+                    $.ajax({
+                        type: 'POST',
+                        url: 'https://api.restall.it/login',
+                        dataType: "json", // Usa JSON per la comunicazione
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(data),
+                        success: function(response){
+                            // Se la richiesta viene eseguita correttamente, la risposta rappresenta i dati
+                            //alert('Login successful: ' + response.message);
+                            window.location = 'https://api.restall.it/user'
+                        },
+                        error: function(err){
+                            alert('Login failed: ' + err.responseText);
+                        }
+                    });
+                });
+            });
+        </script>
+        
+        <!-- se lo vuoi tenere, altrimenti cancella -->
+        <div class="forgot-password">
+            <a href="/reset-password">Hai dimenticato la password?</a>
+        </div>
+    </div>
+</body>
+</html>

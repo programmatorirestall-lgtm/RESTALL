@@ -1,2 +1,0 @@
-/Users/nicopomarico/Developer/restall/android/app/.cxx/Debug/6f6y4o2x/armeabi-v7a/CMakeFiles/edit_cache.dir
-/Users/nicopomarico/Developer/restall/android/app/.cxx/Debug/6f6y4o2x/armeabi-v7a/CMakeFiles/rebuild_cache.dir

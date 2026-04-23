@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>Profilo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            margin-right: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            
+            border: 1px solid #E6E9FF;
+            border-radius: 30px;
+            background-color: #E6E9FF;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #aaa;
+        }
+        .form-group .referral-code {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .form-group .referral-code input {
+            flex: 1;
+        }
+        .form-group .referral-code button {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .form-group .referral-code button:focus {
+            outline: none;
+            border-color: #aaa;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn-delete {
+            background-color: #e74c3c;
+           
+            color: white;
+            margin-top: 20px;
+            border-radius: 30px;
+            color: #FFFFFF;
+            letter-spacing: 1px;
+    font-size: 17px;
+    font-weight: 700;
+        }
+        .btn-primary {
+            background-color: #0F2069;
+            color: white;
+            margin-top: 20px;
+            border-radius: 30px;
+            letter-spacing: 1px;
+            color: #FFFFFF;
+    font-size: 17px;
+   
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Profilo</h2>
+        <form action="/updateProfile" method="POST">
+            <div class="form-group referral-code">
+                <label for="referral">Referral Code</label>
+                <input type="text" id="referral" name="referral" value="<%= referralCode %>" readonly>
+                <button type="button" onclick="copyReferralCode()">Copia</button>
+            </div>
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                <input type="text" id="nome" name="nome" placeholder="Inserisci nome" value="<%= nome %>">
+            </div>
+            <div class="form-group">
+                <label for="cognome">Cognome</label>
+                <input type="text" id="cognome" name="cognome" placeholder="Inserisci il cognome" value="<%= cognome %>">
+            </div>
+            <div class="form-group">
+                <label for="data_nascita">Data di Nascita</label>
+                <input type="date" id="data_nascita" name="data_nascita" value="<%= dataNascita %>">
+            </div>
+            <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+        </form>
+        <form>
+            <button type="submit" class="btn btn-delete" id="delete-button">Elimina Account</button>
+        </form>
+    </div>
+
+    <script>
+        function copyReferralCode() {
+            const referralInput = document.getElementById('referral');
+            referralInput.select();
+            referralInput.setSelectionRange(0, 99999); /* Per i dispositivi mobili */
+            document.execCommand("copy");
+            alert("Codice referral copiato: " + referralInput.value);
+        }
+    </script>
+
+    <script>
+        function getCookie(cname) {
+            let name = cname + "=";
+            let ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        function decodeJWT(jwt){
+            const arrayToken = jwt.split('.');
+            const tokenPayload = JSON.parse(atob(arrayToken[1]));
+            return tokenPayload;
+        }
+
+        $(document).ready(function() {
+                $('#delete-button').click(function(event) {
+                    event.preventDefault(); // Previene l'invio predefinito del form
+        
+                    let jwt = getCookie('jwt');
+                    console.log(jwt)
+                    const decodedJwt = decodeJWT(jwt);
+                    console.log(decodedJwt)
+                    
+                    $.ajax({
+                        type: 'DELETE',
+                        url: 'https://api.restall.it/user/'+ decodedJwt.id,
+                        dataType: "json", // Usa JSON per la comunicazione
+                        contentType: "application/json; charset=utf-8",
+                        success: function(response){
+                            // Se la richiesta viene eseguita correttamente, la risposta rappresenta i dati
+                            //alert('Delete successful: ' + response.message);
+                            window.location = 'https://restall.it'
+                        },
+                        error: function(err){
+                            alert('Delete failed: ' + err.responseText);
+                        }
+                    });
+                });
+            });
+    </script>
+</body>
+</html>

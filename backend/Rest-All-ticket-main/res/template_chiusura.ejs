@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <title>RestAll - Rapporto di Lavoro</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+    
+        <!-- External CSS libraries -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <!-- Favicon icon -->
+        <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon" >
+    
+        <!-- Google fonts -->
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+        
+        <style>
+            /* Reset e base styles */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            /* Impostazioni A4 per la stampa */
+            @page {
+                size: A4;
+                margin: 10mm;
+            }
+
+            @media print {
+                body {
+                    width: 210mm;
+                    min-height: 297mm;
+                    margin: 0;
+                    padding: 0;
+                }
+                
+                .page-break {
+                    page-break-after: always;
+                }
+                
+                .no-print {
+                    display: none;
+                }
+            }
+
+            body {
+                font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                font-size: 9pt;
+                line-height: 1.4;
+                color: #212529;
+                background-color: #fff;
+                width: 210mm;
+                margin: 0 auto;
+                padding: 5mm;
+            }
+
+            /* Layout container */
+            .container {
+                width: 100%;
+                max-width: 100%;
+                margin: 0 auto;
+                padding: 0;
+            }
+
+            .row {
+                display: flex;
+                flex-wrap: wrap;
+                margin-right: -5px;
+                margin-left: -5px;
+            }
+
+            .col,
+            .col-6,
+            .col-4,
+            .col-3,
+            .col-8,
+            .col-12 {
+                position: relative;
+                width: 100%;
+                padding-right: 5px;
+                padding-left: 5px;
+            }
+
+            .col-3 { flex: 0 0 25%; max-width: 25%; }
+            .col-4 { flex: 0 0 33.333333%; max-width: 33.333333%; }
+            .col-6 { flex: 0 0 50%; max-width: 50%; }
+            .col-8 { flex: 0 0 66.666667%; max-width: 66.666667%; }
+            .col-12 { flex: 0 0 100%; max-width: 100%; }
+
+            /* Header con loghi */
+            .invoice-top {
+                margin-bottom: 10px;
+                padding-bottom: 10px;
+                border-bottom: 2px solid #007bff;
+            }
+
+            .logo {
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .logo img {
+                max-height: 45px;
+                max-width: 100%;
+                object-fit: contain;
+            }
+
+            .ticket-number {
+                text-align: right;
+                padding-top: 10px;
+            }
+
+            .ticket-number h5 {
+                font-size: 14pt;
+                margin: 0;
+                color: #007bff;
+                font-weight: 600;
+            }
+
+            /* Sezione dati fatturazione */
+            .dati-fatturazione {
+                background-color: #f8f9fa;
+                padding: 8px;
+                margin-bottom: 10px;
+                border-radius: 4px;
+                border: 1px solid #dee2e6;
+            }
+
+            .dati-fatturazione h6 {
+                font-size: 10pt;
+                font-weight: 600;
+                margin-bottom: 6px;
+                color: #007bff;
+                border-bottom: 1px solid #007bff;
+                padding-bottom: 3px;
+            }
+
+            .dati-fatturazione p,
+            .dati-fatturazione ul {
+                font-size: 8pt;
+                margin: 0;
+                line-height: 1.5;
+            }
+
+            .dati-fatturazione ul {
+                list-style: none;
+                padding-left: 0;
+            }
+
+            .dati-fatturazione li {
+                margin-bottom: 3px;
+            }
+
+            /* Tabelle */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 10px;
+                font-size: 8pt;
+            }
+
+            table th {
+                background-color: #007bff;
+                color: white;
+                font-weight: 600;
+                padding: 6px 4px;
+                text-align: left;
+                border: 1px solid #0056b3;
+                font-size: 8pt;
+            }
+
+            table td {
+                padding: 5px 4px;
+                border: 1px solid #dee2e6;
+                vertical-align: top;
+            }
+
+            table tbody tr:nth-child(even) {
+                background-color: #f8f9fa;
+            }
+
+            .item-desc-1 span {
+                display: block;
+                font-weight: 600;
+                font-size: 8pt;
+            }
+
+            .item-desc-1 small {
+                display: block;
+                color: #6c757d;
+                font-size: 7pt;
+                margin-top: 2px;
+            }
+
+            .text-center { text-align: center; }
+            .text-right { text-align: right; }
+            .fw-bold { font-weight: 700; }
+
+            /* Sezione totali */
+            .totali-table th {
+                font-size: 7pt;
+                padding: 4px 3px;
+            }
+
+            .totali-table td {
+                font-size: 8pt;
+                font-weight: 600;
+            }
+
+            /* Firma */
+            .firma-section {
+                margin: 10px 0;
+                padding: 8px;
+                background-color: #f8f9fa;
+                border-radius: 4px;
+            }
+
+            .firma-section h6 {
+                font-size: 10pt;
+                margin-bottom: 6px;
+                color: #007bff;
+            }
+
+            .firma-img {
+                max-width: 200px;
+                max-height: 80px;
+                border: 1px solid #dee2e6;
+                padding: 5px;
+                background-color: white;
+                display: inline-block;
+            }
+
+            .firma-img img {
+                max-width: 100%;
+                max-height: 70px;
+                object-fit: contain;
+            }
+
+            /* Altre info */
+            .altre-info {
+                margin: 10px 0;
+                padding: 8px;
+                background-color: #f8f9fa;
+                border-radius: 4px;
+            }
+
+            .altre-info h6 {
+                font-size: 10pt;
+                margin-bottom: 6px;
+                color: #007bff;
+            }
+
+            .altre-info ul {
+                list-style: none;
+                padding-left: 0;
+                font-size: 8pt;
+            }
+
+            .altre-info li {
+                margin-bottom: 4px;
+                line-height: 1.4;
+            }
+
+            /* Footer contatti */
+            .invoice-contact {
+                margin-top: 15px;
+                padding-top: 10px;
+                border-top: 2px solid #007bff;
+                font-size: 7pt;
+            }
+
+            .contact-info {
+                margin-bottom: 5px;
+            }
+
+            .contact-info a,
+            .contact-info span {
+                display: inline-block;
+                margin-right: 10px;
+                color: #212529;
+                text-decoration: none;
+                font-size: 7pt;
+            }
+
+            .contact-info i {
+                color: #007bff;
+                margin-right: 3px;
+            }
+
+            /* Spacing utilities */
+            .mb-10 { margin-bottom: 10px; }
+            .mt-10 { margin-top: 10px; }
+            .mb-5 { margin-bottom: 5px; }
+
+            /* Tag per provenienza ricambi */
+            .badge-provenienza {
+                display: inline-block;
+                padding: 2px 6px;
+                font-size: 7pt;
+                font-weight: 600;
+                border-radius: 3px;
+                margin-left: 5px;
+            }
+
+            .badge-magazzino {
+                background-color: #28a745;
+                color: white;
+            }
+
+            .badge-fornitore {
+                background-color: #ffc107;
+                color: #212529;
+            }
+
+            .badge-cliente {
+                background-color: #17a2b8;
+                color: white;
+            }
+
+            /* Ottimizzazione spazi per A4 */
+            h6 {
+                margin: 5px 0;
+            }
+
+            p {
+                margin: 3px 0;
+            }
+
+            strong {
+                font-weight: 600;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Header con loghi e numero ticket -->
+        <div class="container">
+            <div class="invoice-top">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="logo">
+                            <img src="https://res-restall.s3.eu-central-1.amazonaws.com/logo.png" alt="RestAll Logo">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        
+                    </div>
+                    <div class="col-4">
+                        <div class="ticket-number">
+                            <h5>Ticket #<%= data.idTicket %></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dati Cliente e Intervento -->
+        <div class="container dati-fatturazione mb-10">
+            <div class="row">
+                <div class="col-6">
+                    <h6>Info Cliente:</h6>
+                    <p>
+                        <strong>Rag. sociale:</strong> <%= data.ragioneSociale %><br/>
+                        <strong>Indirizzo:</strong> <%= data.indirizzoFatturazione %>, <%= data.citta %><br/>
+                        <strong>Cellulare:</strong> <%= data.numTel %><br/>
+                        <strong>P. IVA:</strong> <%= data.piva %><br/>
+                        <strong>Cod. Univoco:</strong> <%= data.codUnivoco %>
+                    </p>
+                </div>
+                <div class="col-6">
+                    <h6>Info Intervento:</h6>
+                    <ul>
+                        <li><strong>Indirizzo:</strong> <%= data.indirizzo %></li>
+                        <% data.operatori.forEach(operatore => { %>
+                            <li><strong>Operatore:</strong> <%= operatore %></li>
+                        <% }); %>
+                        <li><strong>Tipo:</strong> <%= data.infoIntervento %></li>
+                        <li><strong>Pagamento:</strong> <%= data.metodoPagamento %></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabella Macchine -->
+        <% if(data.datiMacchina && data.datiMacchina.length > 0) { %>
+        <div class="container mb-10">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Modello</th>
+                        <th>Matricola</th>
+                        <th>Tipo</th>
+                        <th>Stato Fine Lavoro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% data.datiMacchina.forEach(macchina => { %>
+                    <tr>
+                        <td>
+                            <div class="item-desc-1">
+                                <span><%= macchina.marca %></span>
+                                <small><%= macchina.modello %></small>
+                            </div>
+                        </td>
+                        <td class="text-center"><%= macchina.matricola %></td>
+                        <td class="text-center"><%= macchina.tipo %></td>
+                        <td class="text-center"><%= macchina.statoFineLavoro %></td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+        <% } %>
+
+        <!-- Tabella Ricambi con Provenienza -->
+        <% let totRicambi = 0 %>
+        <% if(data.orderInfo && data.orderInfo.length > 0) { %>
+        <div class="container mb-10">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 35%;">Ricambio</th>
+                        <th style="width: 15%;">Provenienza</th>
+                        <th style="width: 10%;">Qtà</th>
+                        <th style="width: 15%;">Prezzo Unit.</th>
+                        <th style="width: 15%;">Totale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% data.orderInfo.forEach(item => { %>
+                    <tr>
+                        <td>
+                            <div class="item-desc-1">
+                                <span><%= item.ricambiForniti %></span>
+                                <small><%= item.codiceRicambiForniti %></small>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <% 
+                                let provenienzaClass = 'badge-magazzino';
+                                let provenienzaText = item.provenienza || 'Magazzino';
+                                
+                                if (provenienzaText.toLowerCase().includes('fornitore')) {
+                                    provenienzaClass = 'badge-fornitore';
+                                } else if (provenienzaText.toLowerCase().includes('cliente')) {
+                                    provenienzaClass = 'badge-cliente';
+                                }
+                            %>
+                            <span class="badge-provenienza <%= provenienzaClass %>">
+                                <%= provenienzaText %>
+                            </span>
+                        </td>
+                        <td class="text-center"><%= item.numeroPezziRicambio %></td>
+                        <td class="text-right">€ <%= parseFloat(item.prezzo).toFixed(2) %></td>
+                        <td class="text-right">€ <%= (item.prezzo * item.numeroPezziRicambio).toFixed(2) %></td>
+                        <% totRicambi += item.prezzo * item.numeroPezziRicambio %>
+                    </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+        <% } %>
+
+        <!-- Tabella Totali -->
+        <div class="container mb-10">
+            <table class="totali-table">
+                <thead>
+                    <tr>
+                        <th>Tot. Ricambi</th>
+                        <th>Mano d'Opera</th>
+                        <th>Trasferta</th>
+                        <th>Chiamata</th>
+                        <th>IVA %</th>
+                        <th>Tot. Imponibile</th>
+                        <th>Tot. Fattura</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% 
+                        let trasferta = 0, chiamata = 0, tot = 0; 
+                        if (data.infoIntervento !== 'Manutenzione') {
+                            trasferta = parseFloat(data.costoTrasferta) || 0;
+                            chiamata = parseFloat(data.costoChiamata) || 0;
+                            tot = parseFloat(data.tot) || 0;
+                        } else {
+                            tot = parseFloat(data.supplemento) || 0;
+                        }
+
+                        let totaleNoIva = tot + totRicambi + trasferta + chiamata;
+                        let ivaPercentuale = parseFloat(data.iva) || 0;
+                        let importoIva = (totaleNoIva / 100) * ivaPercentuale;
+                        let totaleFattura = totaleNoIva + importoIva;
+
+                        // Per interventi in garanzia
+                        if (data.infoIntervento === 'Garanzia') {
+                            totaleNoIva = 0;
+                            importoIva = 0;
+                            totaleFattura = 0;
+                        }
+                    %>
+                    <tr>
+                        <td class="text-right">€ <%= totRicambi.toFixed(2) %></td>
+                        <td class="text-right">€ <%= tot.toFixed(2) %></td>
+                        <td class="text-right">€ <%= trasferta.toFixed(2) %></td>
+                        <td class="text-right">€ <%= chiamata.toFixed(2) %></td>
+                        <td class="text-center"><%= ivaPercentuale %>%</td>
+                        <td class="text-right fw-bold">€ <%= totaleNoIva.toFixed(2) %></td>
+                        <td class="text-right fw-bold">
+                            € <%= totaleFattura.toFixed(2) %><br/>
+                            <small style="font-size: 7pt;">(IVA: € <%= importoIva.toFixed(2) %>)</small>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Firma -->
+        <div class="container firma-section mb-10">
+            <div class="row">
+                <div class="col-6">
+                    <h6>Firma Cliente</h6>
+                    <div class="firma-img">
+                        <img src="<%= data.firma %>" alt="Firma">
+                    </div>
+                    <p style="margin-top: 5px; font-size: 8pt;">
+                        <strong>Firmatario:</strong> 
+                        <%= data.ragSocialeFirmatario || '-' %>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Altre Informazioni -->
+        <div class="container altre-info mb-10">
+            <h6>Altre Informazioni</h6>
+            <ul>
+                <% if(data.ticketEsterno && data.ticketEsterno !== "") { %>
+                <li><strong>Richiesta di Intervento:</strong> <%= data.ticketEsterno %></li>
+                <% } %>
+                <li><strong>Descrizione Lavoro:</strong> <%= data.descrLavoro %></li>
+            </ul>
+        </div>
+
+        <!-- Riepilogo Ore (se presente) -->
+        <% if(data.summary && data.summary.length > 0) { %>
+        <div class="container mb-10">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 8%;">N.</th>
+                        <th style="width: 20%;">Evento</th>
+                        <th style="width: 25%;">Data Inizio</th>
+                        <th style="width: 25%;">Data Fine</th>
+                        <th style="width: 22%;">Minuti Lavorativi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% data.summary.forEach((item, index) => { %>
+                    <tr>
+                        <td class="text-center"><%= index + 1 %></td>
+                        <td><%= item.evento %></td>
+                        <td class="text-center"><%= item.dataInizio %></td>
+                        <td class="text-center"><%= item.dataFine %></td>
+                        <td class="text-right"><%= item.oreLavorative %></td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+        <% } %>
+
+        <!-- Footer Contatti -->
+        <div class="container">
+            <div class="invoice-contact">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="contact-info">
+                            <a href="tel:+390883179362 9"><i class="fa fa-phone"></i> +39 0883 179 3629</a>
+                            <a href="mailto:start@startupsrl.info"><i class="fa fa-envelope"></i> start@startupsrl.info</a>
+                            <a href="https://goo.gl/maps/pkAmmKEyifvfLL267"><i class="fa fa-map-marker"></i> S.P. 231 Km 31, 300 ex S.S. 98</a>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="contact-info" style="text-align: right;">
+                            <a href="mailto:startup@pec.valorelegale.it"><i class="fa fa-envelope"></i> startup@pec.valorelegale.it</a>
+                            <span><strong>P.Iva:</strong> 07917170727</span>
+                            <span><strong>Cod. Univoco:</strong> SUBM70N</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
